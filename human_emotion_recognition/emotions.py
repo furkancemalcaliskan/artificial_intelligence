@@ -5,12 +5,23 @@ from statistics import mode
 from utils.datasets import get_labels
 from utils.inference import detect_faces
 from utils.inference import draw_text
+from utils.inference import write_message
 from utils.inference import draw_bounding_box
 from utils.inference import apply_offsets
 from utils.inference import load_detection_model
 from utils.preprocessor import preprocess_input
 
 USE_WEBCAM = True # If false, loads video file source
+
+# creating emotion_messages
+
+angryMsg = ['keep calm bro']
+sadMsg = ['be happy bro']
+happyMsg = ['good to see you bro']
+surpriseMsg = ['are you ok? :D']
+neutralMsg = ['there is no emotion']
+
+emotion_message = ''
 
 # parameters for loading data and images
 emotion_model_path = './models/emotion_model.hdf5'
@@ -39,8 +50,6 @@ video_capture = cv2.VideoCapture(0)
 cap = None
 if (USE_WEBCAM == True):
     cap = cv2.VideoCapture(0) # Webcam source
-else:
-    cap = cv2.VideoCapture('./demo/dinner.mp4') # Video file source
 
 while cap.isOpened(): # True:
     ret, bgr_image = cap.read()
@@ -80,20 +89,27 @@ while cap.isOpened(): # True:
 
         if emotion_text == 'angry':
             color = emotion_probability * np.asarray((255, 0, 0))
+            emotion_message = str(np.random.choice(angryMsg, size=1, replace=False))
         elif emotion_text == 'sad':
             color = emotion_probability * np.asarray((0, 0, 255))
+            emotion_message = str(np.random.choice(sadMsg, size=1, replace=False))
         elif emotion_text == 'happy':
             color = emotion_probability * np.asarray((255, 255, 0))
+            emotion_message = str(np.random.choice(happyMsg, size=1, replace=False))
         elif emotion_text == 'surprise':
             color = emotion_probability * np.asarray((0, 255, 255))
+            emotion_message = str(np.random.choice(surpriseMsg, size=1, replace=False))
         else:
             color = emotion_probability * np.asarray((0, 255, 0))
+            emotion_message = str(np.random.choice(neutralMsg, size=1, replace=False))
 
         color = color.astype(int)
         color = color.tolist()
 
         draw_bounding_box(face_coordinates, rgb_image, color)
         draw_text(face_coordinates, rgb_image, emotion_mode,
+                  color, 0, -45, 1, 1)
+        write_message(face_coordinates, rgb_image, emotion_message,
                   color, 0, -45, 1, 1)
 
     bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
