@@ -13,12 +13,19 @@ from utils.preprocessor import preprocess_input
 
 USE_WEBCAM = True # If false, loads video file source
 
+# creating control values
+
+message = ""
+text = ""
+
 # creating emotion_messages
 
-angryMsg = ['keep calm bro']
-sadMsg = ['be happy bro']
-happyMsg = ['good to see you bro']
-surpriseMsg = ['are you ok? :D']
+angryMsg = ['keep calm','omg, looks so scary','is that your monster face?']
+disgustMsg = ['disgusting','is there a bad taste in your mouth?','yikes!']
+sadMsg = ['please be happy',':(((','this face deserves that being happy']
+fearMsg = ['(scary noises)','heres johnny!','do you like scary movies?']
+happyMsg = ['good to see you bro','nice smile :)',':D']
+surpriseMsg = ['are you ok? :D','what happened?','what did you see?']
 neutralMsg = ['there is no emotion']
 
 emotion_message = ''
@@ -89,19 +96,58 @@ while cap.isOpened(): # True:
 
         if emotion_text == 'angry':
             color = emotion_probability * np.asarray((255, 0, 0))
-            emotion_message = str(np.random.choice(angryMsg, size=1, replace=False))
+            if emotion_text == text:
+                emotion_message = message
+            else:
+                emotion_message = str(np.random.choice(angryMsg, size=1, replace=False))
+                message = emotion_message
+                text = emotion_text
+        elif emotion_text == 'disgust':
+            color = emotion_probability * np.asarray((0, 255, 0))
+            if emotion_text == text:
+                emotion_message = message
+            else:
+                emotion_message = str(np.random.choice(disgustMsg, size=1, replace=False))
+                message = emotion_message
+                text = emotion_text
         elif emotion_text == 'sad':
             color = emotion_probability * np.asarray((0, 0, 255))
-            emotion_message = str(np.random.choice(sadMsg, size=1, replace=False))
+            if emotion_text == text:
+                emotion_message = message
+            else:
+                emotion_message = str(np.random.choice(sadMsg, size=1, replace=False))
+                message = emotion_message
+                text = emotion_text
+        elif emotion_text == 'fear':
+            color = emotion_probability * np.asarray((255, 0, 255))
+            if emotion_text == text:
+                emotion_message = message
+            else:
+                emotion_message = str(np.random.choice(fearMsg, size=1, replace=False))
+                message = emotion_message
+                text = emotion_text
         elif emotion_text == 'happy':
             color = emotion_probability * np.asarray((255, 255, 0))
-            emotion_message = str(np.random.choice(happyMsg, size=1, replace=False))
+            if emotion_text == text:
+                emotion_message = message
+            else:
+                emotion_message = str(np.random.choice(happyMsg, size=1, replace=False))
+                message = emotion_message
+                text = emotion_text
         elif emotion_text == 'surprise':
             color = emotion_probability * np.asarray((0, 255, 255))
-            emotion_message = str(np.random.choice(surpriseMsg, size=1, replace=False))
+            if emotion_text == text:
+                emotion_message = message
+            else:
+                emotion_message = str(np.random.choice(surpriseMsg, size=1, replace=False))
+                message = emotion_message
+                text = emotion_text
         else:
-            color = emotion_probability * np.asarray((0, 255, 0))
+            color = emotion_probability * np.asarray((255, 255, 255))
             emotion_message = str(np.random.choice(neutralMsg, size=1, replace=False))
+            message = emotion_message
+            text = emotion_text
+                
 
         color = color.astype(int)
         color = color.tolist()
