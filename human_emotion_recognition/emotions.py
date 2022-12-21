@@ -13,6 +13,11 @@ from utils.preprocessor import preprocess_input
 
 USE_WEBCAM = True # If false, loads video file source
 
+# implementing emotion models
+
+EMOTIONS = ["angry" ,"disgust","fear", "happy", "sad", "surprise",
+ "neutral"]
+
 # creating control values
 
 message = ""
@@ -50,7 +55,7 @@ emotion_window = []
 
 # starting video streaming
 
-cv2.namedWindow('window_frame')
+cv2.namedWindow('Face')
 video_capture = cv2.VideoCapture(0)
 
 # Select video or webcam feed
@@ -68,6 +73,7 @@ while cap.isOpened(): # True:
 
     faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5,
 			minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+    canvas = np.zeros((250, 300, 3), dtype="uint8")
 
     for face_coordinates in faces:
 
@@ -86,6 +92,8 @@ while cap.isOpened(): # True:
         emotion_label_arg = np.argmax(emotion_prediction)
         emotion_text = emotion_labels[emotion_label_arg]
         emotion_window.append(emotion_text)
+        pred = emotion_classifier.predict(gray_face)[0]
+        
 
         if len(emotion_window) > frame_window:
             emotion_window.pop(0)
@@ -157,9 +165,23 @@ while cap.isOpened(): # True:
                   color, 0, -45, 1, 1)
         write_message(face_coordinates, rgb_image, emotion_message,
                   color, 0, -45, 1, 1)
+        
+        for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, pred)):
+                # construct the label text
+                text = "{}: {:.2f}%".format(emotion, prob)
+
+                # draw the label + probability bar on the canvas
+                
+                w = int(prob * 300)
+                cv2.rectangle(canvas, (7, (i * 35) + 5),
+                (w, (i * 35) + 35), (0, 0, 255), -1)
+                cv2.putText(canvas, text, (10, (i * 35) + 23),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.45,
+                (255, 255, 255), 2)
 
     bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
-    cv2.imshow('window_frame', bgr_image)
+    cv2.imshow('Face', bgr_image)
+    cv2.imshow('Probability', canvas)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
