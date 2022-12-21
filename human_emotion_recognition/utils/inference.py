@@ -37,6 +37,20 @@ def write_message(coordinates, image_array, message, color, x_offset=0, y_offset
                 cv2.FONT_HERSHEY_SIMPLEX,
                 font_scale, color, thickness, cv2.LINE_AA)
     
+def show_percentages(canvas,EMOTIONS,pred):
+    for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, pred)):
+                # construct the label text
+                text = "{}: {:.2f}%".format(emotion, prob * 100)
+
+                # draw the label + probability bar on the canvas
+                
+                w = int(prob * 300)
+                cv2.rectangle(canvas, (7, (i * 35) + 5),
+                (w, (i * 35) + 35), (0, 0, 255), -1)
+                cv2.putText(canvas, text, (10, (i * 35) + 23),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.45,
+                (255, 255, 255), 2)
+    
 def get_colors(num_classes):
     colors = plt.cm.hsv(np.linspace(0, 1, num_classes)).tolist()
     colors = np.asarray(colors) * 255

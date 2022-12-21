@@ -6,6 +6,7 @@ from utils.datasets import get_labels
 from utils.inference import detect_faces
 from utils.inference import draw_text
 from utils.inference import write_message
+from utils.inference import show_percentages
 from utils.inference import draw_bounding_box
 from utils.inference import apply_offsets
 from utils.inference import load_detection_model
@@ -166,18 +167,7 @@ while cap.isOpened(): # True:
         write_message(face_coordinates, rgb_image, emotion_message,
                   color, 0, -45, 1, 1)
         
-        for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, pred)):
-                # construct the label text
-                text = "{}: {:.2f}%".format(emotion, prob)
-
-                # draw the label + probability bar on the canvas
-                
-                w = int(prob * 300)
-                cv2.rectangle(canvas, (7, (i * 35) + 5),
-                (w, (i * 35) + 35), (0, 0, 255), -1)
-                cv2.putText(canvas, text, (10, (i * 35) + 23),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45,
-                (255, 255, 255), 2)
+        show_percentages(canvas,EMOTIONS,pred)
 
     bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
     cv2.imshow('Face', bgr_image)
