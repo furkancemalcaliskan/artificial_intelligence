@@ -3,7 +3,7 @@
 This software recognizes human faces and their corresponding emotions from a video or webcam feed
 via https://github.com/petercunha/Emotion
 
-In addition to the original work, I am working on giving specific messages to the analyzed emotion.
+In addition to the original work, I am working on giving specific messages to the analyzed emotion and giving emotion probability percentages at different windows.
 
 Install these dependencies with `pip3 install <module name>`
 -	tensorflow
