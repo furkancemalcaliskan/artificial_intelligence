@@ -166,7 +166,7 @@ while cap.isOpened(): # True:
         draw_text(face_coordinates, rgb_image, emotion_mode,
                   color, 0, -45, 1, 1)
         write_message(face_coordinates, rgb_image, emotion_message,
-                  color, 0, -45, 1, 1)
+                  color, 0, 45, 1, 1)
         
         show_percentages(canvas,EMOTIONS,pred)
 

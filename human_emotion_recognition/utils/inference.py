@@ -33,8 +33,8 @@ def draw_text(coordinates, image_array, text, color, x_offset=0, y_offset=0,
 def write_message(coordinates, image_array, message, color, x_offset=0, y_offset=0,
                                                 font_scale=2, thickness=2):
     message = message.replace("'","").replace('[','').replace(']','')
-    x, y = coordinates[:2]
-    cv2.putText(image_array, message, (x - x_offset, y - y_offset),
+    x, y, width, height= coordinates[:4]
+    cv2.putText(image_array, message, (x + x_offset, y + height + y_offset),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 font_scale, color, thickness, cv2.LINE_AA)
     
